@@ -1,0 +1,16 @@
+{
+    "search_keywords": [
+    ],
+    "download_path": ".\\torrent",
+    "ftp_server": {
+        "address": "",
+        "port": 21,
+        "id": "",
+        "pw": "",
+        "upload": ""
+    },
+    "telegram": {
+        "token": "",
+        "chat_id": -1
+    }
+}
