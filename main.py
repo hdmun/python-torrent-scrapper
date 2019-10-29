@@ -4,6 +4,7 @@ from collections import namedtuple
 
 import ftpclient
 import scrapper
+import telegram
 
 
 def json_obj_to_namedtuple(d):
@@ -15,9 +16,7 @@ def json_to_namedtuple(filename: str):
         return json.load(f, encoding='utf-8', object_hook=json_obj_to_namedtuple)
 
 
-def main():
-    settings = json_to_namedtuple('.settings.json')
-
+def main(settings):
     download_dir = settings.download_path
     if not os.path.isdir(download_dir):
         os.mkdir(download_dir)
@@ -29,4 +28,12 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        settings = json_to_namedtuple('.settings.json')
+
+        main(settings)
+    except Exception as ex:
+        token: str = settings.telegram.token
+        chat_id: str = settings.telegram.chat_id
+        telegram.send_message(token, chat_id, f'exception={ex}')
+        raise
