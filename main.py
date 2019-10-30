@@ -26,7 +26,6 @@ def main(settings):
         for keyword in settings.search_keywords:
             torrentwork = scrapper.TorrentWork(ftp, settings.telegram, download_dir)
             torrentwork.search(keyword)
-            break
 
 
 if __name__ == "__main__":

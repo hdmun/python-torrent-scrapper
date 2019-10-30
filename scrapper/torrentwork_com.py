@@ -39,7 +39,7 @@ class TorrentWork(object):
         for div_ in subject_list:
             subject = div_.find_all('a')[0]
             subject_link = subject.get('href')
-            sub_title = subject.text.replace('\n', '')
+            sub_title = subject.text.replace('\n', '').strip()
 
             if '720p-NEXT' not in sub_title:
                 continue
