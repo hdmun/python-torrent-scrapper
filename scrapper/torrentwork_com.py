@@ -67,11 +67,13 @@ class TorrentWork(object):
         download_btns = soup.find_all('a', attrs={'class': 'btn btn-color btn-xs view_file_download'})
         for btn in download_btns:
             href = btn.get('href')
-            if 'magnet:?xt=urn:btih:' in href:
-                break
+            print('href', href)
+            if 'magnet:?xt=urn:btih:' not in href:
+                continue
 
             response = scrapper.download_torrent_magnet2torrent(href)
             if response.status_code != 200:
+                print('status_code', response.status_code)
                 time.sleep(_SLEEP_TIME_SEC)
                 continue
 
@@ -82,3 +84,4 @@ class TorrentWork(object):
             time.sleep(_SLEEP_TIME_SEC)
             self._ftp.upload(self._download_path, filename)
             self._send_telegram(f'donwload torrent file|filename={filename}')
+            break
