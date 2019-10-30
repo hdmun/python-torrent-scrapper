@@ -24,8 +24,9 @@ def main(settings):
 
     with ftpclient.openftp(settings.ftp_server) as ftp:
         for keyword in settings.search_keywords:
-            torrentwal = scrapper.Torrentwal(ftp, settings.telegram, download_dir)
-            torrentwal.search(keyword)
+            torrentwork = scrapper.TorrentWork(ftp, settings.telegram, download_dir)
+            torrentwork.search(keyword)
+            break
 
 
 if __name__ == "__main__":
