@@ -38,6 +38,9 @@ class Torrentwal(object):
         sub_list = soup.find_all('a', attrs={'target': 's'})
         for i, subject in enumerate(sub_list, 0):
             sub_title = subject.text.replace('\r', '').replace('\n', '').replace('\t', '')
+            sub_title = sub_title.replace('.mp4', '')
+            sub_title = sub_title.strip()
+
             if '720p-NEXT' not in sub_title:
                 continue
 
