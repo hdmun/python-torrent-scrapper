@@ -44,6 +44,10 @@ class TorrentWork(object):
             if '720p-NEXT' not in sub_title:
                 continue
 
+            if self._is_downloaded(sub_title):
+                print('downloaded', sub_title)
+                return
+
             self._parse_subject_page(subject_link, sub_title)
 
         time.sleep(1)
