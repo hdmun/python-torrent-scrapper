@@ -1,5 +1,6 @@
 import json
 import os
+import traceback
 from collections import namedtuple
 
 import ftpclient
@@ -27,6 +28,30 @@ def main(settings):
             torrentwal.search(keyword)
 
 
+def _get_traceback_str():
+    '''
+    from http://egloos.zum.com/mcchae/v/11018564
+    '''
+
+    lines = traceback.format_exc().strip().split('\n')
+    rl = [lines[-1]]
+    lines = lines[1:-1]
+    lines.reverse()
+    nstr = ''
+    for i in range(len(lines)):
+        line = lines[i].strip()
+        if line.startswith('File "'):
+            eles = lines[i].strip().split('"')
+            basename = os.path.basename(eles[1])
+            lastdir = os.path.basename(os.path.dirname(eles[1]))
+            eles[1] = '%s/%s' % (lastdir,basename)
+            rl.append('^\t%s %s' % (nstr,'"'.join(eles)))
+            nstr = ''
+        else:
+            nstr += line
+    return '\n'.join(rl)
+
+
 if __name__ == "__main__":
     try:
         settings = json_to_namedtuple('.settings.json')
@@ -35,5 +60,4 @@ if __name__ == "__main__":
     except Exception as ex:
         token: str = settings.telegram.token
         chat_id: str = settings.telegram.chat_id
-        telegram.send_message(token, chat_id, f'exception={ex}')
-        raise
+        telegram.send_message(token, chat_id, f'exception={ex}|callstack={_get_traceback_str()}')
