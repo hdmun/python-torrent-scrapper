@@ -59,7 +59,7 @@ class TorrentWork(object):
 
         response = requests.get(subject_link, headers=scrapper._headers)
         if response.status_code != 200:
-            self._send_telegram(f'request error search page|status_code={response.status_code}')
+            self._send_telegram(f'request error search page|status_code={response.status_code}|url={subject_link}')
             return
 
         html_text = response.text
