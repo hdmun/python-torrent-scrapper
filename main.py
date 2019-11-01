@@ -24,8 +24,14 @@ def main(settings):
 
     with ftpclient.openftp(settings.ftp_server) as ftp:
         for keyword in settings.search_keywords:
-            torrentwork = scrapper.TorrentWork(ftp, settings.telegram, download_dir)
-            torrentwork.search(keyword)
+            for class_ in scrapper.classes:
+                site_scrapper = class_(ftp, settings.telegram, download_dir)
+                try:
+                    site_scrapper.search(keyword)
+                except Exception as ex:
+                    token: str = settings.telegram.token
+                    chat_id: str = settings.telegram.chat_id
+                    telegram.send_message(token, chat_id, f'exception={traceback.format_exc()}')
 
 
 if __name__ == "__main__":

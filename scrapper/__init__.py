@@ -21,3 +21,8 @@ def file_exist(target_dir, filename):
 
 from .torrentwal_com import Torrentwal
 from .torrentwork_com import TorrentWork
+
+classes = [
+    Torrentwal,
+    TorrentWork
+]
