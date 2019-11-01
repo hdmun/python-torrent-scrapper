@@ -67,15 +67,15 @@ class TorrentWork(object):
         download_btns = soup.find_all('a', attrs={'class': 'btn btn-color btn-xs view_file_download'})
         for btn in download_btns:
             href = btn.get('href')
-            print('href', href)
-            if 'magnet:?xt=urn:btih:' not in href:
-                continue
-
-            response = scrapper.download_torrent_magnet2torrent(href)
-            if response.status_code != 200:
-                print('status_code', response.status_code)
-                time.sleep(_SLEEP_TIME_SEC)
-                continue
+            print('href', href, self._base_url)
+            if 'magnet:?xt=urn:btih:' in href:
+                response = scrapper.download_torrent_magnet2torrent(href)
+                if response.status_code != 200:
+                    print('status_code', response.status_code, href)
+                    time.sleep(_SLEEP_TIME_SEC)
+                    continue
+            else:
+                response = scrapper.download_torrent_filedue(href)
 
             filename = f'{sub_title}.torrent'
             with open(f'{self._download_path}\\{filename}', 'wb') as f:
