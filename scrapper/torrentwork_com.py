@@ -83,4 +83,4 @@ class TorrentWork(object):
 
             time.sleep(_SLEEP_TIME_SEC)
             self._ftp.upload(self._download_path, filename)
-            self._send_telegram(f'donwload torrent file|filename={filename}')
+            self._send_telegram(f'donwload torrent file|filename={filename}|url={self._base_url}')
