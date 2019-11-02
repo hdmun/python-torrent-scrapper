@@ -27,7 +27,8 @@ class TorrentWork(object):
         params = {'stx': keyword.replace(' ', '+')}
         res = requests.get(search_url, params=params, headers=scrapper._headers)
         if res.status_code != 200:
-            self._send_telegram(f'request error search page|status_code={res.status_code}')
+            if res.status_code != 403:
+                self._send_telegram(f'request error search page|status_code={res.status_code}')
             return
 
         html_text = res.text
@@ -52,7 +53,7 @@ class TorrentWork(object):
 
             self._parse_subject_page(subject_link, sub_title)
 
-        time.sleep(1)
+        time.sleep(5)
 
     def _parse_subject_page(self, subject_link: str, sub_title: str):
         _SLEEP_TIME_SEC = 10
