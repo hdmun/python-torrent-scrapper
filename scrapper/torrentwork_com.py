@@ -9,6 +9,7 @@ import telegram
 
 class TorrentWork(object):
     def __init__(self, ftp, telegram: dict, download_path: str):
+        self._session = requests.Session()
         self._base_url = 'https://torrentwork.com'
         self._ftp = ftp
         self._token: str = telegram.token
@@ -25,7 +26,7 @@ class TorrentWork(object):
     def search(self, keyword: str):
         search_url = self._base_url + '/bbs/search.php'
         params = {'stx': keyword.replace(' ', '+')}
-        res = requests.get(search_url, params=params, headers=scrapper._headers)
+        res = self._session.get(search_url, params=params, headers=scrapper._headers)
         if res.status_code != 200:
             if res.status_code != 403:
                 self._send_telegram(f'request error search page|status_code={res.status_code}')
@@ -58,7 +59,7 @@ class TorrentWork(object):
     def _parse_subject_page(self, subject_link: str, sub_title: str):
         _SLEEP_TIME_SEC = 10
 
-        response = requests.get(subject_link, headers=scrapper._headers)
+        response = self._session.get(subject_link, headers=scrapper._headers)
         if response.status_code != 200:
             self._send_telegram(f'request error subject page|status_code={response.status_code}|url={subject_link}')
             return
@@ -67,6 +68,10 @@ class TorrentWork(object):
         soup = bs4.BeautifulSoup(html_text, 'html.parser')
         download_btns = soup.find_all('a', attrs={'class': 'btn btn-color btn-xs view_file_download'})
         for btn in download_btns:
+            if self._is_downloaded(sub_title):
+                print('downloaded', sub_title)
+                return
+
             href = btn.get('href')
             print('href', href, self._base_url)
             if 'magnet:?xt=urn:btih:' in href:

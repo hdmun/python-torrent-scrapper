@@ -17,6 +17,41 @@ def download_torrent_itorrents(magent_name):
     return requests.get(url, headers=_headers)
 
 
+def download_torrent_filetender(session, download_page_url, referer):
+    __headers = copy.deepcopy(_headers)
+    __headers['accept'] = '*/*'
+    __headers['referer'] = referer
+    __headers['sec-fetch-mode'] = 'cors'
+    __headers['sec-fetch-site'] = 'same-origin'
+
+    response = session.get(download_page_url, headers=__headers)
+    if response.status_code != 200:
+        print('faield download_torrent_filetender')
+        return response
+
+    with open('filetender.html', 'w') as f:
+        f.write(response.text)
+
+    soup = bs4.BeautifulSoup(response.text, 'html.parser')
+    key = soup.select_one('#Down > input[type=hidden]:nth-child(1)')
+    Ticket = soup.select_one('#Ticket')
+    Randstr = soup.select_one('#Randstr')
+    UserIP = soup.find('input', attrs={'type': 'hidden', 'name': 'UserIP'})
+    params = {
+        'key': key.get('value'),
+        'Ticket': Ticket.get('value'),
+        'Randstr': Randstr.get('value'),
+        'UserIP': '+'.join(UserIP.get('value').split(','))
+    }
+    __headers = copy.deepcopy(_headers)
+    __headers['sec-fetch-mode'] = 'navigaters'
+    __headers['sec-fetch-site'] = 'same-origin'
+    __headers['sec-fetch-user'] = '?1'
+
+    downlaod_url = 'https://file.filetender.net/file3.php'
+    return session.get(downlaod_url, params=params, headers=__headers)
+
+
 def download_torrent_filedue(download_page_url):
     _session = requests.Session()
     response = _session.get(download_page_url, headers=_headers)
