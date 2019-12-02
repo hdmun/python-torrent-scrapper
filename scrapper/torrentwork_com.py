@@ -28,7 +28,7 @@ class TorrentWork(object):
         params = {'stx': keyword.replace(' ', '+')}
         res = self._session.get(search_url, params=params, headers=scrapper._headers)
         if res.status_code != 200:
-            if res.status_code != 403:
+            if res.status_code not in [403, 502]:
                 self._send_telegram(f'request error search page|status_code={res.status_code}|search_url={search_url}')
             return
 
