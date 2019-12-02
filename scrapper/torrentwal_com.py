@@ -81,7 +81,8 @@ class Torrentwal(object):
                     print(res.headers['content-type'])
                     continue
 
-            elif 'javascript:_filetender' in href:
+            elif 'javascript:_filetender' in href and False:
+                # filetender request 에러 나고 있어서 마그넷 방식으로 바꿈
                 download_page = self._base_url + href.replace("javascript:_filetender('", '').replace("')", '')
                 res = scrapper.download_torrent_filetender(self._session, download_page, sub_link)
             else:
