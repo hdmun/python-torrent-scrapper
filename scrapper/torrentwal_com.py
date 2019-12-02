@@ -31,7 +31,7 @@ class Torrentwal(object):
         params = {'k': keyword.replace(' ', '+')}
         res = self._session.get(search_url, params=params, headers=scrapper._headers)
         if res.status_code != 200:
-            self._send_telegram(f'request error search page|status_code={res.status_code}')
+            self._send_telegram(f'request error search page|status_code={res.status_code}|search_url={search_url}')
             return
 
         self._parse_search_page(res.text)
