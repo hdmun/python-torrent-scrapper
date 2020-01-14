@@ -52,7 +52,7 @@ class Torrentwal(object):
                 continue
 
             if self._is_downloaded(sub_title):
-                print('downloaded', sub_title)
+                logging.info(f'downloaded={sub_title}')
                 return
 
             sub_link = subject.get('href').replace('../', self._base_url)
@@ -67,7 +67,7 @@ class Torrentwal(object):
         soup = bs4.BeautifulSoup(res.text, 'html.parser')
         for search_magnetlink in soup.find_all('a'):
             if self._is_downloaded(sub_title):
-                print('downloaded', sub_title)
+                logging.info(f'downloaded={sub_title}')
                 return
 
             href = search_magnetlink.get('href')
@@ -79,7 +79,7 @@ class Torrentwal(object):
                 res = scrapper.download_torrent_itorrents(magnet_link)
 
                 if res.headers['content-type'] != 'application/x-bittorrent':
-                    print(res.headers['content-type'])
+                    logging.info(f'content-type={res.headers['content-type']}')
                     continue
 
             elif 'javascript:_filetender' in href and False:
@@ -94,7 +94,7 @@ class Torrentwal(object):
                 time.sleep(_SLEEP_TIME_SEC)
                 continue
 
-            print(sub_title, href)
+            logging.info(f'sub_title={sub_title}|href={href}')
 
             filename = f'{sub_title}.torrent'
             with open(f'{self._download_path}\\{filename}', 'wb') as f:

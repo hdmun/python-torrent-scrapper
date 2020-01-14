@@ -49,7 +49,7 @@ class TorrentWork(object):
                 continue
 
             if self._is_downloaded(sub_title):
-                print('downloaded', sub_title)
+                logging.info(f'downloaded={sub_title}')
                 return
 
             self._parse_subject_page(subject_link, sub_title)
@@ -69,15 +69,15 @@ class TorrentWork(object):
         download_btns = soup.find_all('a', attrs={'class': 'btn btn-color btn-xs view_file_download'})
         for btn in download_btns:
             if self._is_downloaded(sub_title):
-                print('downloaded', sub_title)
+                logging.info(f'downloaded={sub_title}')
                 return
 
             href = btn.get('href')
-            print('href', href, self._base_url)
+            logging.info(f'href={href}|base_url={self._base_url}')
             if 'magnet:?xt=urn:btih:' in href:
                 response = scrapper.download_torrent_magnet2torrent(href)
                 if response.status_code != 200:
-                    print('status_code', response.status_code, href)
+                    logging.error('status_code', response.status_code, href)
                     time.sleep(_SLEEP_TIME_SEC)
                     continue
             else:
