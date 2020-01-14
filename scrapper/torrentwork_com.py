@@ -29,7 +29,7 @@ class TorrentWork(object):
         res = self._session.get(search_url, params=params, headers=scrapper._headers)
         if res.status_code != 200:
             if res.status_code not in [403, 502]:
-                self._send_telegram(f'request error search page|status_code={res.status_code}|search_url={search_url}')
+                logging.error(f'request error search page|status_code={res.status_code}|search_url={search_url}')
             return
 
         html_text = res.text
@@ -61,7 +61,7 @@ class TorrentWork(object):
 
         response = self._session.get(subject_link, headers=scrapper._headers)
         if response.status_code != 200:
-            self._send_telegram(f'request error subject page|status_code={response.status_code}|url={subject_link}')
+            logging.error(f'request error subject page|status_code={response.status_code}|url={subject_link}')
             return
 
         html_text = response.text

@@ -1,4 +1,5 @@
 import time
+import logging
 
 import bs4
 import requests
@@ -31,7 +32,7 @@ class Torrentwal(object):
         params = {'k': keyword.replace(' ', '+')}
         res = self._session.get(search_url, params=params, headers=scrapper._headers)
         if res.status_code != 200:
-            self._send_telegram(f'request error search page|status_code={res.status_code}|search_url={search_url}')
+            logging.error(f'request error search page|status_code={res.status_code}|search_url={search_url}')
             return
 
         self._parse_search_page(res.text)
@@ -60,7 +61,7 @@ class Torrentwal(object):
     def _parse_subject_page(self, sub_title: str, sub_link: str):
         res = self._session.get(sub_link, headers=scrapper._headers)
         if res.status_code != 200:
-            self._send_telegram(f'request error subject page|status_code={res.status_code}')
+            logging.error(f'request error subject page|status_code={res.status_code}')
             return
 
         soup = bs4.BeautifulSoup(res.text, 'html.parser')
@@ -89,7 +90,7 @@ class Torrentwal(object):
                 continue
 
             if res.status_code != 200:
-                self._send_telegram(f'download error torrent itorrents|status_code={res.status_code}|url={magnet_link}')
+                logging.error(f'download error torrent itorrents|status_code={res.status_code}|url={magnet_link}')
                 time.sleep(_SLEEP_TIME_SEC)
                 continue
 

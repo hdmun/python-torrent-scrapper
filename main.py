@@ -1,6 +1,7 @@
 import json
 import os
 import traceback
+import logging
 from collections import namedtuple
 
 import ftpclient
@@ -36,6 +37,8 @@ def main(settings):
 
 if __name__ == "__main__":
     try:
+        FORMAT = '%(asctime)s|%(levelname)s|%(filename)s=%(lineno)s|%(message)s'
+        logging.basicConfig(filename='./python-torrent-scrapper.log', level=logging.DEBUG, format=FORMAT)
         settings = json_to_namedtuple('.settings.json')
 
         main(settings)
